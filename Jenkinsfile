@@ -7,10 +7,17 @@ pipeline {
               sh "mvn clean package -DskipTests=true"
             }
         }  
-      stage('Unit Tests - JUnit and JaCoCo') {
-        steps {
-          sh "mvn test"
-       }
-     } 
+      stage('Unit Test - JUnit and Jacoco') {
+            steps {
+              //sh "export JAVA_HOME=/opt/openjdk17; mvn test"
+              sh "mvn test"
+            } 
+            post {
+              always {
+                junit 'target/surefire-reports/*.xml'
+                jacoco execPattern: 'target/jacoco.exec'
+              }
+            }         
+      }
     }
 }
